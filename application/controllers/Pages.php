@@ -34,25 +34,48 @@ class Pages extends CI_Controller {
         $data['users'] = $this->user->getAll();
         $data['page'] = 'users';
         $this->load->view('templates/header', $data);
-        $this->load->view('userList');
+        $this->load->view('users');
         $this->load->view('templates/footer', $data);
     }
 
     public function edit($id) {
-        $data['page'] = 'edit';
-        $data['user'] = $this->user->get($id);
-        $data['message'] = '';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $passHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $this->user->update($id, $_POST['fullname'], $passHash);
+            $data['users'] = $this->user->getAll();
+            $data['page'] = 'users';
+        } else {
+            $data['page'] = 'edit';
+            $data['user'] = $this->user->get($id);
+            $data['message'] = '';
+        }
         $this->load->view('templates/header', $data);
-        $this->load->view('edit');
+        $this->load->view($data['page']);
         $this->load->view('templates/footer', $data);
     }
+
+    public function delete($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->user->delete($id);
+            $data['users'] = $this->user->getAll();
+            $data['page'] = 'users';
+        } else {
+            $data['page'] = 'delete';
+            $data['user'] = $this->user->get($id);
+            $data['message'] = '';
+        }
+        $this->load->view('templates/header', $data);
+        $this->load->view($data['page']);
+        $this->load->view('templates/footer', $data);
+    }
+
 
     public function login() {
         $data['page'] = 'login';
         $data['message'] = '';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $this->user->find($_POST['username']);
-            if ($user != NULL) {
+            if ($user != NULL && password_verify($_POST['password'], $user['password'])) {
                 $data['page'] = 'content';
                 $_SESSION['user'] = $user['fullname'];
                 $data['message'] = $user['fullname'] . ': welcome back';
@@ -71,7 +94,8 @@ class Pages extends CI_Controller {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $this->user->find($_POST['username']);
             if ($user == NULL) {
-                $this->user->insert($_POST['username'], $_POST['fullname'], $_POST['password']);
+                $passHash = password_hash($_POST['password'], PASSWORD_DEFAULT);               
+                $this->user->insert($_POST['username'], $_POST['fullname'], $passHash);
                 $data['page'] = 'content';
                 $data['message'] = 'New user registered: ' . $_POST['fullname'];
             } else {

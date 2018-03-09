@@ -53,5 +53,6 @@ $route['default_controller'] = 'pages';
 $route['home'] = 'pages';
 $route['welcome'] = 'welcome';
 $route['(:any)'] = 'pages/$1';
+$route['(:any)/(:num)'] = 'pages/$1/$2';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

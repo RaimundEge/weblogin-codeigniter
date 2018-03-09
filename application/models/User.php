@@ -33,5 +33,15 @@ class User extends CI_Model {
         );
         $this->db->insert('users', $data);
     }
+    public function update($i, $f, $p) {
+        $data = array(
+            'fullname' => $f,
+            'password' => $p
+        );
+        $this->db->update('users', $data, "id = $i" );
+    }
 
+    public function delete($i) {
+        $this->db->delete('users', array('id' => $i));
+    }
 }

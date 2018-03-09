@@ -23,21 +23,21 @@
             <div class="navbar-collapse nav-collapse">
                 <ul class="nav navbar-nav">
                     <li class="<?php if ($page == "home") echo 'active' ?>">
-                        <a href="home">Home</a>
+                        <a href="<?php echo base_url('home'); ?>">Home</a>
                     </li>
                     <li class="<?php if ($page == "content") echo 'active' ?>">
-                        <a href="content">Content</a>
+                        <a href="<?php echo base_url('content'); ?>">Content</a>
                     </li>
                     <?php if (isset($_SESSION['user']) && $_SESSION['user'] == 'root') { ?>
                     <li class="<?php if ($page == "users") echo 'active' ?>">
-                        <a href="users">User Management</a>
+                        <a href="<?php echo base_url('users'); ?>">User Management</a>
                     </li>
                     <?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php if (!isset($_SESSION['user'])) { ?>
                     <li>
-                        <a href="login">
+                        <a href="<?php echo base_url('login'); ?>">
                             <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
                         </a>
                     </li>
@@ -46,7 +46,7 @@
                         <p class="navbar-text"><?php echo $_SESSION['user'] ?></p>
                     </li>
                     <li>
-                        <a href="logout">
+                        <a href="<?php echo base_url('logout'); ?>">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
                         </a>
                     </li>
